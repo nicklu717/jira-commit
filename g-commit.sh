@@ -3,7 +3,13 @@
 # set -x
 
 current_branch=$(git branch --show-current)
-issue_key=$(echo "${current_branch}" | grep -Eo "PROJ-\d+")
+project_key_file="project-key.txt"
+if [[ ! -f "${project_key_file}" ]]; then
+    gum input --placeholder "Enter you project key (e.g. \"PROJ\")" >"${project_key_file}"
+fi
+
+project_key=$(cat "${project_key_file}")
+issue_key=$(echo "${current_branch}" | grep -Eo "${project_key}-\d+")
 if [[ -n "${issue_key}" ]]; then
     issue_key_prefix="[${issue_key}] "
 fi
